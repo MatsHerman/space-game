@@ -7,10 +7,11 @@ var cursors;
 var spaceParts;
 var score = 0;
 var scoreText;
-var playerSpeed = 250;
+var playerSpeed = 150;
 var backgroundMusic;
 var background;
 var collectSpacePartSound;
+var ground
 window.onload = function(){
   game = new Phaser.Game(height, width, Phaser.AUTO, '');
   game.state.add("Preload", preload);
@@ -25,12 +26,13 @@ var preload = function(game){}
 preload.prototype = {
   preload: function(){
     game.load.image('sky', 'img/space-background.jpg');
-    game.load.image('platform', 'img/platform.png');
+    game.load.image('platform', 'img/platform1.png');
+    game.load.image('ground', 'img/moonground.jpg')
     game.load.image('SpacePart', 'img/spacepart.png');
     game.load.spritesheet('dude', 'img/Astronaut.png', 32, 32);
-
+    game.load.image('rock', 'img/rock.png')
     game.load.audio('backgroundMusic', ['audio/background.mp3']);
-    game.load.audio('pickUpPartsSound', ['audio/shimmer_1.mp3']);
+    game.load.audio('pickUpPartsSound', ['audio/key2 pickup.mp3']);
   },
   create: function(){
     this.game.state.start("PlayGame");
@@ -62,33 +64,34 @@ preload.prototype = {
       // Vi setter på physics på platform
       platforms.enableBody = true;
       // Vi legger til et nytt element til platforms. Phaser vet ikke hva platforms variabelen er, men vi sier her at den skal ha ground elementet, og hvor den skal plasseres, og hvilken sprite som skal brukes.
-      var ground = platforms.create(0, game.world.height - 64, 'platform');
+      ground = platforms.create(0, game.world.height - 64, 'ground');
       // Vi scaler opp bakken slik at den passer inn.
-      ground.scale.setTo(3, 2);
+      ground.scale.setTo(4, 2);
       // Bakken har jo physics. Hvis vi lar den være som den er, så vil den falle ned når vi starter spillet, eller når noe kommer borti den.
       // Ved å sette body.immovable = true, låser vi den fast. Henger du med? ja, men hva er elements? Det er det vi legger til platform. Vi har en gruppering av forskjellige platformer.
       // Ground er et av de. Man kan f eks ha andre platformer man kan hoppe på,uosu.
       ground.body.immovable = true;
-    	var block = platforms.create(260, 500, 'platform');
-    	block.scale.setTo(0.1, 2);
+    	var block = platforms.create(260, 500, 'rock');
+    	block.scale.setTo(0.1, 0.1);
     	block.body.immovable = true;
       // Her legger vi til en ny platform, i tillegg til ground som vi allerede har
-      var ledge = platforms.create(400, 400, 'platform');
-    	ledge.scale.setTo(1,0.5);
+      var ledge = platforms.create(450, 380, 'platform');
+    	ledge.scale.setTo(0.15, 0.15);
       ledge.body.immovable = true;
 
-    	var ledge = platforms.create(290, 300, 'platform');
-      ledge.scale.setTo(0.2, 0.5);
+    	var ledge = platforms.create(350, 300, 'platform');
+      ledge.scale.setTo(0.03, 0.03);
     	ledge.body.immovable = true;
       // Og her legger vi til ennå et platform element. Henger du med? du skjønner hva alle parameterne er? for det meste ja. Det er egentlig bare plassering av objekter, og hvilket sprite som skal brukes..
-      ledge = platforms.create(-150, 250, 'platform');
+      ledge = platforms.create(-10, 250, 'platform');
+      ledge.scale.setTo(0.1, 0.1)
       ledge.body.immovable = true;
       player = game.add.sprite(32, game.world.height - 150, 'dude');
       // Vi legger til physics på player
       game.physics.arcade.enable(player);
       // Vi setter på litt physics ting.
-      player.body.bounce.y = 0.2;
-      player.body.gravity.y = 300;
+      player.body.bounce.y = 0.3;
+      player.body.gravity.y = 400;
       player.body.collideWorldBounds = true;
       // Animasjoner. Du vet hva et sprite sheet er? ja, men kan du se playeren? eller er det bare jeg som ikke kan se hane
       // Jeg ser ingenting akkurat nå. Jeg må se litt hvorfor den ikke blir drawed. jeg trur bakgrunnen er foran den, når du la til bakgrunnen, forsvant stjerna også
@@ -113,7 +116,7 @@ preload.prototype = {
         // Vi setter på litt gravitasjon
         spacePart.body.gravity.y = 100;
         // Vi lar de sprette litt random
-        spacePart.body.bounce.y = 0.9 + Math.random() * 0.01;
+        spacePart.body.bounce.y = 0.3 + Math.random() * 0.01;
 
       }
     },
