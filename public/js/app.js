@@ -10,6 +10,7 @@ var scoreText;
 var playerSpeed = 250;
 var backgroundMusic;
 var background;
+var collectSpacePartSound;
 window.onload = function(){
   game = new Phaser.Game(height, width, Phaser.AUTO, '');
   game.state.add("Preload", preload);
@@ -28,7 +29,8 @@ preload.prototype = {
     game.load.image('SpacePart', 'img/spacepart.png');
     game.load.spritesheet('dude', 'img/Astronaut.png', 32, 32);
 
-    game.load.audio('backgroundMusic', ['audio/background.mp3'])
+    game.load.audio('backgroundMusic', ['audio/background.mp3']);
+    game.load.audio('pickUpPartsSound', ['audio/shimmer_1.mp3']);
   },
   create: function(){
     this.game.state.start("PlayGame");
@@ -41,6 +43,8 @@ preload.prototype = {
       backgroundMusic = game.add.audio('backgroundMusic');
       backgroundMusic.play();
 
+
+      collectSpacePartSound = game.add.audio('pickUpPartsSound');
       // Så, game variabelen er et nytt Phaser.game. I phaser er det en "class" som heter add. Og vi bruker funksjonen sprite, inni add, til å legge til sprites. Skjønner? ja
       // Vi har brukt 3 arguments, jeg regner med du skjønner hva de alle er forno? x, y, hvilken sprite. Jepp
 
@@ -156,6 +160,9 @@ preload.prototype = {
 
 function collectSpacePart(player, spacePart){
   spacePart.kill();
+  collectSpacePartSound.play();
+
+
 
   score += 1;
   scoreText.text = 'Parts collected: ' + score;
