@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Phaser - Making your first game, part 1</title>
+	<script type="text/javascript" src="js/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+function preload() {
+	// her legger vi til images. legg til ground, star og dude
+	game.load.image('sky', 'img/sky.png');
+	game.load.image('platform', 'img/platform.png');
+	game.load.image('star', 'img/star.png');
+	// Nice. Dude er et sprite, så vi må også fortelle phaser hvor stor spritet er
+	game.load.image('dude' 'img/dude.png', 32, 48);
+
+}
+
+function create() {
+	// Her legges ting inn i selve spillet.
+	game.add.sprite(0, 0, 'star');
+}
+
+function update() {
+}
+
+</script>
+
+</body>
+</html>
+
+Derja!
